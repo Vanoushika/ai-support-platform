@@ -21,12 +21,8 @@ def vector_literal(vector):
 def connect():
     import psycopg
     from psycopg.rows import dict_row
-    password_file = os.environ.get("VECTOR_PASSWORD_FILE")
-    if not password_file:
-        raise RuntimeError("VECTOR_PASSWORD_FILE must be configured for pgvector.")
-    password = Path(password_file).read_text().strip()
-    if not password:
-        raise RuntimeError("Vector database password file is empty.")
+    from secret_access import read_vector_password
+    password = read_vector_password()
     return psycopg.connect(
         host=os.getenv("VECTOR_HOST", "vector-db"),
         port=int(os.getenv("VECTOR_PORT", "5432")),

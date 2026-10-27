@@ -13,16 +13,36 @@ x-app: &app
     VECTOR_HOST: vector-db
     VECTOR_DATABASE: support_knowledge
     VECTOR_USER: support
-    VECTOR_PASSWORD_FILE: /run/secrets/vector_password
+    VECTOR_SECRET_PROVIDER: openbao
+    OPENBAO_ADDR: http://openbao:8200
+    OPENBAO_CREDENTIALS_FILE: /run/secrets/bao_app_credentials
   extra_hosts:
     - "host.lima.internal:192.168.5.2"
   volumes:
     - tickets-data:/data
   secrets:
-    - vector_password
+    - bao_app_credentials
   init: true
 
 services:
+  openbao:
+    image: openbao/openbao:2.5.5
+    # Root writes this local demo's named volume; mlock is disabled in config.
+    user: "0:0"
+    entrypoint: ["bao"]
+    command: ["server", "-config=/bao/config/server.hcl"]
+    ports:
+      - "127.0.0.1:8201:8200"
+    volumes:
+      - ./openbao/config.hcl:/bao/config/server.hcl:ro
+      - openbao-data:/bao/data
+    healthcheck:
+      test: ["CMD", "bao", "status", "-address=http://127.0.0.1:8200"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
   vector-db:
     image: pgvector/pgvector:0.8.7-pg17-trixie
     environment:
@@ -61,6 +81,8 @@ services:
   indexer:
     <<: *app
     depends_on:
+      openbao:
+        condition: service_healthy
       vector-db:
         condition: service_healthy
     command: ["python", "retrieval.py", "--index"]
@@ -168,7 +190,10 @@ volumes:
   prometheus-data:
   grafana-data:
   vector-data:
+  openbao-data:
 
 secrets:
   vector_password:
     file: ./.local-secrets/vector_password
+  bao_app_credentials:
+    file: ./.local-secrets/bao-app.json
