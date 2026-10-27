@@ -1,0 +1,64 @@
+{
+  "run_id": "20261026T172107901628Z",
+  "dataset": "Six-case development regression set",
+  "generator_model": "qwen3.5:4b",
+  "judge_model": "qwen3.5:4b",
+  "embedding_model": "nomic-embed-text",
+  "ragas_version": "0.4.3",
+  "openai_client_version": "1.109.1",
+  "knowledge_fingerprints": {
+    "password_reset.md": "500285d49676e02c128f4a5082c32fe0e740740acea36c40ff3440944070ac3a",
+    "premium_access.md": "5e9c7951291c897b13f924207716cca0788fc1ad2c7c6779f0b204668941b559",
+    "refund_requests.md": "1accd15db25328cd1ac99407d5998ba7b9f5901df476ed539688fe8d330b9bb7"
+  },
+  "limitations": [
+    "This is a small development set, not a held-out benchmark.",
+    "Generator and judge use the same local model.",
+    "Judge scores can be wrong and require manual calibration.",
+    "Faithfulness does not prove relevance or task completion.",
+    "Missing evaluator scores are errors, not passing results.",
+    "Classification and retrieval accuracy use all run cases as the denominator; failures do not count as matches."
+  ],
+  "results": [
+    {
+      "id": "password_missing",
+      "title": "Password reset email missing",
+      "description": "I requested a password reset email fifteen minutes ago and it has not arrived.",
+      "expected_category": "password_reset",
+      "expected_source": "password_reset.md",
+      "actual_category": "password_reset",
+      "category_correct": true,
+      "actual_source": "password_reset.md",
+      "retrieval_correct": true,
+      "draft": "I acknowledge that you requested a password reset email fifteen minutes ago and have not received it yet. According to our documentation, the standard waiting period is ten minutes before requesting a new email [KB-001].\n\nPlease try the following steps:\n1. Check your Spam or Junk folder for the message.\n2. Verify that the email address entered on the sign-in page matches the one associated with your account.\n3. If the email has not arrived after another ten minutes, request a new reset email using the sign-in page.\n\nIf you have already checked these folders and confirmed the email address is correct, but still receive no emails after two additional ten-minute intervals, a human support agent will need to review this request [KB-001]. Please note that I cannot send emails or access your account directly; only a human agent can escalate the ticket.",
+      "sources": [
+        {
+          "filename": "password_reset.md",
+          "article_id": "KB-001",
+          "content": "# Password reset emails\n\nArticle ID: KB-001\nSupport queue: account_access\n\n## When to use this article\nThe customer requested a password reset email but has not received it.\n\n## Customer troubleshooting steps\n1. Check the Spam or Junk folder.\n2. Confirm that the email address entered on the sign-in page is the\n   address associated with the account. Do not post the address publicly.\n3. If the email has not arrived after 10 minutes, the customer should\n   request one new reset email using the sign-in page.\n4. If the second email has not arrived after another 10 minutes,\n   a human support agent should route the ticket to the account access team.\n\n## Roles and capabilities\nThe customer requests reset emails through the sign-in page.\nA human support agent handles escalation.\nThe AI assistant only drafts suggested replies.\nIt cannot request reset emails, access accounts, inspect delivery logs,\nor escalate tickets.\nNo action has been performed merely because a draft was generated.\n\n## Security rules\nNever ask for passwords, reset links, or verification codes.\n\n## Timing\nThe documented troubleshooting intervals are 10 minutes after each\nrequest. No other delivery guarantees or waiting periods are specified.",
+          "similarity": 0.8065678719346403
+        }
+      ],
+      "review_warnings": [],
+      "faithfulness": null,
+      "draft_seconds": 9.79,
+      "errors": {
+        "faithfulness": "IncompleteOutputException: "
+      },
+      "classification_reason": "Customer reports that the requested password reset email has not been received."
+    }
+  ],
+  "summary": {
+    "cases_run": 1,
+    "category_matches": 1,
+    "category_accuracy": 1.0,
+    "retrieval_top1_matches": 1,
+    "retrieval_top1_accuracy": 1.0,
+    "successful_drafts": 1,
+    "successful_faithfulness_scores": 0,
+    "mean_faithfulness_scored_cases_only": null,
+    "mean_retrieval_and_draft_seconds": 9.79,
+    "cases_with_errors": 1,
+    "cases_with_review_warnings": 0
+  }
+}

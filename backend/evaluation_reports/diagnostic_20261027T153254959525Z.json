@@ -1,0 +1,56 @@
+{
+  "case_id": "password_second_attempt",
+  "source_report": "/Users/anoushika/Projects/ai-support-platform/backend/evaluation_reports/20261026T174729231783Z.json",
+  "judge_model": "qwen3.5:4b",
+  "judge_settings": {
+    "max_tokens": 4096,
+    "temperature": 0,
+    "reasoning_effort": "none"
+  },
+  "ragas_version": "0.4.3",
+  "title": "Second recovery email never arrived",
+  "description": "I checked spam and requested another password reset email. Another ten minutes have passed without receiving it.",
+  "draft": "A human support agent will need to review this request. The customer has already checked the Spam folder and requested a second reset email; since it has not arrived after another 10 minutes, the escalation condition is met per [KB-001]. Please route the ticket to the account access team for further assistance.",
+  "retrieved_contexts": [
+    "# Password reset emails\n\nArticle ID: KB-001\nSupport queue: account_access\n\n## When to use this article\nThe customer requested a password reset email but has not received it.\n\n## Customer troubleshooting steps\n1. Check the Spam or Junk folder.\n2. Confirm that the email address entered on the sign-in page is the\n   address associated with the account. Do not post the address publicly.\n3. If the email has not arrived after 10 minutes, the customer should\n   request one new reset email using the sign-in page.\n4. If the second email has not arrived after another 10 minutes,\n   a human support agent should route the ticket to the account access team.\n\n## Roles and capabilities\nThe customer requests reset emails through the sign-in page.\nA human support agent handles escalation.\nThe AI assistant only drafts suggested replies.\nIt cannot request reset emails, access accounts, inspect delivery logs,\nor escalate tickets.\nNo action has been performed merely because a draft was generated.\n\n## Security rules\nNever ask for passwords, reset links, or verification codes.\n\n## Timing\nThe documented troubleshooting intervals are 10 minutes after each\nrequest. No other delivery guarantees or waiting periods are specified."
+  ],
+  "previous_faithfulness": 0.0,
+  "faithfulness": 0.0,
+  "trace": {
+    "extracted_statements": [
+      "A human support agent must review this request.",
+      "The customer has already checked the Spam folder and requested a second password reset email.",
+      "The second password reset email has not arrived after another ten minutes have passed.",
+      "The escalation condition is met according to knowledge base document KB-001.",
+      "The ticket must be routed to the account access team for further assistance."
+    ],
+    "verdicts": [
+      {
+        "statement": "A human support agent must review this request.",
+        "reason": "The context states that a human support agent handles escalation, but it does not explicitly state that they must review the initial request before any action is taken. The requirement to review is implied by the workflow but not directly stated as a mandatory step for every request.",
+        "verdict": 0
+      },
+      {
+        "statement": "The customer has already checked the Spam folder and requested a second password reset email.",
+        "reason": "The context describes the troubleshooting steps, including checking the Spam folder and requesting a new email if the first one hasn't arrived. However, it does not state that these specific actions have actually been completed by the customer in this scenario.",
+        "verdict": 0
+      },
+      {
+        "statement": "The second password reset email has not arrived after another ten minutes have passed.",
+        "reason": "The context mentions a troubleshooting step where if the first email hasn't arrived after 10 minutes, a new one should be requested. It also mentions that if the second email hasn't arrived after another 10 minutes, escalation occurs. However, it does not state as a fact that this specific condition (the second email not arriving) has actually happened.",
+        "verdict": 0
+      },
+      {
+        "statement": "The escalation condition is met according to knowledge base document KB-001.",
+        "reason": "The context describes the conditions under which escalation occurs (if the second email hasn't arrived after another 10 minutes). However, it does not state that these conditions have actually been met in this specific case. The statement asserts a fact about the current situation rather than describing the rule itself.",
+        "verdict": 0
+      },
+      {
+        "statement": "The ticket must be routed to the account access team for further assistance.",
+        "reason": "The context states that if the second email has not arrived after another 10 minutes, a human support agent should route the ticket to the account access team. This is a conditional requirement based on specific timing conditions. Without confirmation that those conditions are met, we cannot infer this action must have been taken or is currently required.",
+        "verdict": 0
+      }
+    ]
+  },
+  "error": null
+}

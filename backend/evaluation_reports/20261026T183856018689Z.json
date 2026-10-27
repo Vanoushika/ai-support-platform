@@ -1,0 +1,90 @@
+{
+  "run_id": "20261026T183856018689Z",
+  "mode": "rescore",
+  "input_file": "/Users/anoushika/Projects/ai-support-platform/backend/evaluation_reports/20261026T174729231783Z.json",
+  "input_sha256": "f417e1aca1a389c1845b8c61b304fc932bd4d0be0d52e019cadd2e23132ac84c",
+  "judge_model": "qwen3.5:4b",
+  "judge_settings": {
+    "max_tokens": 4096,
+    "temperature": 0,
+    "reasoning_effort": "none"
+  },
+  "ragas_version": "0.4.3",
+  "openai_client_version": "1.109.1",
+  "limitations": [
+    "Small development set, not a held-out benchmark.",
+    "Judge scores may be incorrect and require human review.",
+    "Faithfulness does not prove relevance or task completion.",
+    "Missing scores are errors, not passing results.",
+    "Generator and judge may use the same model.",
+    "Rescoring reuses the saved draft and source contents exactly.",
+    "In rescore mode, classification, retrieval, warnings, and generation timings are copied, not measured again.",
+    "Judge explanations may be absent or incomplete."
+  ],
+  "results": [
+    {
+      "id": "password_second_attempt",
+      "title": "Second recovery email never arrived",
+      "description": "I checked spam and requested another password reset email. Another ten minutes have passed without receiving it.",
+      "expected_category": "password_reset",
+      "expected_source": "password_reset.md",
+      "actual_category": "password_reset",
+      "category_correct": true,
+      "actual_source": "password_reset.md",
+      "retrieval_correct": true,
+      "draft": "A human support agent will need to review this request. The customer has already checked the Spam folder and requested a second reset email; since it has not arrived after another 10 minutes, the escalation condition is met per [KB-001]. Please route the ticket to the account access team for further assistance.",
+      "sources": [
+        {
+          "filename": "password_reset.md",
+          "article_id": "KB-001",
+          "content": "# Password reset emails\n\nArticle ID: KB-001\nSupport queue: account_access\n\n## When to use this article\nThe customer requested a password reset email but has not received it.\n\n## Customer troubleshooting steps\n1. Check the Spam or Junk folder.\n2. Confirm that the email address entered on the sign-in page is the\n   address associated with the account. Do not post the address publicly.\n3. If the email has not arrived after 10 minutes, the customer should\n   request one new reset email using the sign-in page.\n4. If the second email has not arrived after another 10 minutes,\n   a human support agent should route the ticket to the account access team.\n\n## Roles and capabilities\nThe customer requests reset emails through the sign-in page.\nA human support agent handles escalation.\nThe AI assistant only drafts suggested replies.\nIt cannot request reset emails, access accounts, inspect delivery logs,\nor escalate tickets.\nNo action has been performed merely because a draft was generated.\n\n## Security rules\nNever ask for passwords, reset links, or verification codes.\n\n## Timing\nThe documented troubleshooting intervals are 10 minutes after each\nrequest. No other delivery guarantees or waiting periods are specified.",
+          "similarity": 0.788645686650557
+        }
+      ],
+      "review_warnings": [],
+      "faithfulness": 0.0,
+      "draft_seconds": 5.09,
+      "errors": {},
+      "classification_reason": "Customer reports missing second password reset email after requesting a new one.",
+      "faithfulness_reason": null,
+      "faithfulness_metadata": null,
+      "faithfulness_seconds": 33.15,
+      "previous_faithfulness": 0.0
+    }
+  ],
+  "summary": {
+    "cases_run": 1,
+    "category_matches": 1,
+    "category_accuracy": 1.0,
+    "retrieval_top1_matches": 1,
+    "retrieval_top1_accuracy": 1.0,
+    "successful_drafts": 1,
+    "successful_faithfulness_scores": 1,
+    "mean_faithfulness_scored_cases_only": 0.0,
+    "mean_retrieval_and_draft_seconds": 5.09,
+    "cases_with_errors": 0,
+    "cases_with_review_warnings": 0
+  },
+  "original_report_metadata": {
+    "run_id": "20261026T174729231783Z",
+    "dataset": "Six-case development regression set",
+    "generator_model": "qwen3.5:4b",
+    "judge_model": "qwen3.5:4b",
+    "embedding_model": "nomic-embed-text",
+    "ragas_version": "0.4.3",
+    "openai_client_version": "1.109.1",
+    "knowledge_fingerprints": {
+      "password_reset.md": "500285d49676e02c128f4a5082c32fe0e740740acea36c40ff3440944070ac3a",
+      "premium_access.md": "5e9c7951291c897b13f924207716cca0788fc1ad2c7c6779f0b204668941b559",
+      "refund_requests.md": "1accd15db25328cd1ac99407d5998ba7b9f5901df476ed539688fe8d330b9bb7"
+    },
+    "limitations": [
+      "This is a small development set, not a held-out benchmark.",
+      "Generator and judge use the same local model.",
+      "Judge scores can be wrong and require manual calibration.",
+      "Faithfulness does not prove relevance or task completion.",
+      "Missing evaluator scores are errors, not passing results.",
+      "Classification and retrieval accuracy use all run cases as the denominator; failures do not count as matches."
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "password_missing",
+    "title": "Password reset email missing",
+    "description": "I requested a password reset email fifteen minutes ago and it has not arrived.",
+    "expected_category": "password_reset",
+    "expected_source": "password_reset.md"
+  },
+  {
+    "id": "password_second_attempt",
+    "title": "Second recovery email never arrived",
+    "description": "I checked spam and requested another password reset email. Another ten minutes have passed without receiving it.",
+    "expected_category": "password_reset",
+    "expected_source": "password_reset.md"
+  },
+  {
+    "id": "premium_locked",
+    "title": "Premium tools are still locked",
+    "description": "My subscription upgrade is complete on the billing page, but the premium tools remain unavailable.",
+    "expected_category": "premium_access",
+    "expected_source": "premium_access.md"
+  },
+  {
+    "id": "premium_after_signin",
+    "title": "Upgrade completed but access still missing",
+    "description": "I signed out and signed back in with the account used for my upgrade. Billing says completed, but premium features are still locked.",
+    "expected_category": "premium_access",
+    "expected_source": "premium_access.md"
+  },
+  {
+    "id": "refund_duplicate",
+    "title": "Please refund a duplicate payment",
+    "description": "My subscription was charged twice. I want a refund of the duplicate payment.",
+    "expected_category": "refund",
+    "expected_source": "refund_requests.md"
+  },
+  {
+    "id": "refund_timing",
+    "title": "When will my refund arrive",
+    "description": "I want a refund for an unexpected subscription charge. Can you guarantee that the money will arrive tomorrow?",
+    "expected_category": "refund",
+    "expected_source": "refund_requests.md"
+  }
+]

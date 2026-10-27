@@ -1,0 +1,189 @@
+{
+  "run_id": "20261026T173543432270Z",
+  "dataset": "Six-case development regression set",
+  "generator_model": "qwen3.5:4b",
+  "judge_model": "qwen3.5:4b",
+  "embedding_model": "nomic-embed-text",
+  "ragas_version": "0.4.3",
+  "openai_client_version": "1.109.1",
+  "knowledge_fingerprints": {
+    "password_reset.md": "500285d49676e02c128f4a5082c32fe0e740740acea36c40ff3440944070ac3a",
+    "premium_access.md": "5e9c7951291c897b13f924207716cca0788fc1ad2c7c6779f0b204668941b559",
+    "refund_requests.md": "1accd15db25328cd1ac99407d5998ba7b9f5901df476ed539688fe8d330b9bb7"
+  },
+  "limitations": [
+    "This is a small development set, not a held-out benchmark.",
+    "Generator and judge use the same local model.",
+    "Judge scores can be wrong and require manual calibration.",
+    "Faithfulness does not prove relevance or task completion.",
+    "Missing evaluator scores are errors, not passing results.",
+    "Classification and retrieval accuracy use all run cases as the denominator; failures do not count as matches."
+  ],
+  "results": [
+    {
+      "id": "password_missing",
+      "title": "Password reset email missing",
+      "description": "I requested a password reset email fifteen minutes ago and it has not arrived.",
+      "expected_category": "password_reset",
+      "expected_source": "password_reset.md",
+      "actual_category": "password_reset",
+      "category_correct": true,
+      "actual_source": "password_reset.md",
+      "retrieval_correct": true,
+      "draft": "I acknowledge that you requested a password reset email fifteen minutes ago and have not received it yet. According to our documentation [KB-001], the first step is to check your Spam or Junk folder. Please also confirm that the email address entered on the sign-in page matches the one associated with your account. If the email has not arrived after 10 minutes, you should request a new reset email using the sign-in page. If the second email does not arrive within another 10 minutes, a human support agent will need to review this request and route it to the account access team. Please note that I cannot send emails or access your account directly.",
+      "sources": [
+        {
+          "filename": "password_reset.md",
+          "article_id": "KB-001",
+          "content": "# Password reset emails\n\nArticle ID: KB-001\nSupport queue: account_access\n\n## When to use this article\nThe customer requested a password reset email but has not received it.\n\n## Customer troubleshooting steps\n1. Check the Spam or Junk folder.\n2. Confirm that the email address entered on the sign-in page is the\n   address associated with the account. Do not post the address publicly.\n3. If the email has not arrived after 10 minutes, the customer should\n   request one new reset email using the sign-in page.\n4. If the second email has not arrived after another 10 minutes,\n   a human support agent should route the ticket to the account access team.\n\n## Roles and capabilities\nThe customer requests reset emails through the sign-in page.\nA human support agent handles escalation.\nThe AI assistant only drafts suggested replies.\nIt cannot request reset emails, access accounts, inspect delivery logs,\nor escalate tickets.\nNo action has been performed merely because a draft was generated.\n\n## Security rules\nNever ask for passwords, reset links, or verification codes.\n\n## Timing\nThe documented troubleshooting intervals are 10 minutes after each\nrequest. No other delivery guarantees or waiting periods are specified.",
+          "similarity": 0.8065678719346403
+        }
+      ],
+      "review_warnings": [],
+      "faithfulness": 0.8333333333333334,
+      "draft_seconds": 5.46,
+      "errors": {},
+      "classification_reason": "Customer reports that the requested password reset email has not been received."
+    },
+    {
+      "id": "password_second_attempt",
+      "title": "Second recovery email never arrived",
+      "description": "I checked spam and requested another password reset email. Another ten minutes have passed without receiving it.",
+      "expected_category": "password_reset",
+      "expected_source": "password_reset.md",
+      "actual_category": "password_reset",
+      "category_correct": true,
+      "actual_source": "password_reset.md",
+      "retrieval_correct": true,
+      "draft": "I acknowledge that you have checked the Spam folder and requested a second password reset email. According to our documentation, if the second email does not arrive after another 10 minutes, the next step is to request one new reset email using the sign-in page [KB-001]. \n\nPlease try requesting a third reset email now. If you do not receive it within 10 minutes of this new request, a human support agent will need to review this request [KB-001]. Please note that I cannot escalate tickets or access your account; only a human agent can perform those actions.",
+      "sources": [
+        {
+          "filename": "password_reset.md",
+          "article_id": "KB-001",
+          "content": "# Password reset emails\n\nArticle ID: KB-001\nSupport queue: account_access\n\n## When to use this article\nThe customer requested a password reset email but has not received it.\n\n## Customer troubleshooting steps\n1. Check the Spam or Junk folder.\n2. Confirm that the email address entered on the sign-in page is the\n   address associated with the account. Do not post the address publicly.\n3. If the email has not arrived after 10 minutes, the customer should\n   request one new reset email using the sign-in page.\n4. If the second email has not arrived after another 10 minutes,\n   a human support agent should route the ticket to the account access team.\n\n## Roles and capabilities\nThe customer requests reset emails through the sign-in page.\nA human support agent handles escalation.\nThe AI assistant only drafts suggested replies.\nIt cannot request reset emails, access accounts, inspect delivery logs,\nor escalate tickets.\nNo action has been performed merely because a draft was generated.\n\n## Security rules\nNever ask for passwords, reset links, or verification codes.\n\n## Timing\nThe documented troubleshooting intervals are 10 minutes after each\nrequest. No other delivery guarantees or waiting periods are specified.",
+          "similarity": 0.788645686650557
+        }
+      ],
+      "review_warnings": [],
+      "faithfulness": 0.0,
+      "draft_seconds": 6.91,
+      "errors": {},
+      "classification_reason": "Customer reports missing second password reset email after requesting a new one."
+    },
+    {
+      "id": "premium_locked",
+      "title": "Premium tools are still locked",
+      "description": "My subscription upgrade is complete on the billing page, but the premium tools remain unavailable.",
+      "expected_category": "premium_access",
+      "expected_source": "premium_access.md",
+      "actual_category": "premium_access",
+      "category_correct": true,
+      "actual_source": "premium_access.md",
+      "retrieval_correct": true,
+      "draft": "I acknowledge that you have completed your subscription upgrade on the billing page, yet the premium tools remain unavailable. According to KB-002, please sign out and sign back in to refresh your session. Additionally, verify that you are using the same account associated with the upgrade. Please confirm whether your billing page currently displays the status as \"completed\" or \"pending.\"\n\nThe available documentation does not provide specific timelines for feature activation or instructions on how to manually unlock tools. Since the upgrade shows as completed but access is still restricted, a human support agent will need to review this request to investigate further. I cannot verify payment details or activate features myself. Please proceed with the sign-out and re-login steps, then reply with your billing page status.",
+      "sources": [
+        {
+          "filename": "premium_access.md",
+          "article_id": "KB-002",
+          "content": "# Premium features unavailable after upgrading\n\nArticle ID: KB-002\nSupport queue: billing\n\n## When to use this article\nThe customer upgraded their subscription but cannot access premium features.\n\n## Troubleshooting steps\n1. Sign out and sign back in to refresh the session.\n2. Confirm that the customer is using the same account used for the upgrade.\n3. Ask whether their billing page shows the upgrade as completed or pending.\n4. If the upgrade shows as completed and signing in again does not\n   restore access, escalate the ticket to the billing team.\n\n## Security rules\nDo not request card numbers, passwords, or payment authentication codes.\n\n## Limits\nThe assistant cannot verify payment, change a subscription, or activate\npremium features.\nDo not promise an activation time or claim the issue has been fixed.",
+          "similarity": 0.7980630679867721
+        }
+      ],
+      "review_warnings": [
+        "No article citation found. Check whether the draft is supported by the retrieved material."
+      ],
+      "faithfulness": 0.9090909090909091,
+      "draft_seconds": 7.0,
+      "errors": {},
+      "classification_reason": "Customer reports that premium tools remain unavailable despite a completed subscription upgrade."
+    },
+    {
+      "id": "premium_after_signin",
+      "title": "Upgrade completed but access still missing",
+      "description": "I signed out and signed back in with the account used for my upgrade. Billing says completed, but premium features are still locked.",
+      "expected_category": "premium_access",
+      "expected_source": "premium_access.md",
+      "actual_category": "premium_access",
+      "category_correct": true,
+      "actual_source": "premium_access.md",
+      "retrieval_correct": true,
+      "draft": "I acknowledge that you have signed out and back in, and confirmed your billing page shows the upgrade as completed [KB-002]. Since signing in again did not restore access to premium features despite a completed billing status, this requires further review.\n\nA human support agent will need to review this request to investigate why the system is not recognizing your active subscription. Please wait while we forward this ticket to the billing team for verification. Do not attempt to share any payment details or authentication codes with anyone else.",
+      "sources": [
+        {
+          "filename": "premium_access.md",
+          "article_id": "KB-002",
+          "content": "# Premium features unavailable after upgrading\n\nArticle ID: KB-002\nSupport queue: billing\n\n## When to use this article\nThe customer upgraded their subscription but cannot access premium features.\n\n## Troubleshooting steps\n1. Sign out and sign back in to refresh the session.\n2. Confirm that the customer is using the same account used for the upgrade.\n3. Ask whether their billing page shows the upgrade as completed or pending.\n4. If the upgrade shows as completed and signing in again does not\n   restore access, escalate the ticket to the billing team.\n\n## Security rules\nDo not request card numbers, passwords, or payment authentication codes.\n\n## Limits\nThe assistant cannot verify payment, change a subscription, or activate\npremium features.\nDo not promise an activation time or claim the issue has been fixed.",
+          "similarity": 0.8194991267911118
+        }
+      ],
+      "review_warnings": [],
+      "faithfulness": 0.8333333333333334,
+      "draft_seconds": 5.16,
+      "errors": {},
+      "classification_reason": "Customer reports that after a successful subscription upgrade, premium features remain locked despite billing confirmation."
+    },
+    {
+      "id": "refund_duplicate",
+      "title": "Please refund a duplicate payment",
+      "description": "My subscription was charged twice. I want a refund of the duplicate payment.",
+      "expected_category": "refund",
+      "expected_source": "refund_requests.md",
+      "actual_category": "refund",
+      "category_correct": true,
+      "actual_source": "refund_requests.md",
+      "retrieval_correct": true,
+      "draft": "I acknowledge your request regarding the duplicate charge on your subscription [KB-003]. Since you have already identified the issue, I will ask for the specific reason for the refund to ensure all details are clear. Please note that refunds require approval from an authorized billing agent, and I cannot process or approve them directly [KB-003].\n\nA human support agent will need to review this request. You may provide any additional transaction details you have on file, but please do not share full card numbers or banking credentials for security reasons [KB-003].",
+      "sources": [
+        {
+          "filename": "refund_requests.md",
+          "article_id": "KB-003",
+          "content": "# Refund requests\n\nArticle ID: KB-003\nSupport queue: billing\n\n## When to use this article\nThe customer requests a refund or reports an unexpected charge.\n\n## Handling steps\n1. Acknowledge the customer's request.\n2. Ask for the reason for the refund if it has not been provided.\n3. Route the request to the billing team for human review.\n\n## Approval requirements\nEvery refund requires approval from an authorized billing agent.\nThe assistant must not approve, reject, or issue a refund.\n\n## Security rules\nNever request full payment card details or banking credentials.\n\n## Limits\nThese documents do not specify refund eligibility windows or processing\ntimes. Do not invent either.\nRouting a request does not mean a refund has been approved.",
+          "similarity": 0.6467124885054684
+        }
+      ],
+      "review_warnings": [],
+      "faithfulness": 0.625,
+      "draft_seconds": 5.37,
+      "errors": {},
+      "classification_reason": "Customer requests a refund for a duplicate charge."
+    },
+    {
+      "id": "refund_timing",
+      "title": "When will my refund arrive",
+      "description": "I want a refund for an unexpected subscription charge. Can you guarantee that the money will arrive tomorrow?",
+      "expected_category": "refund",
+      "expected_source": "refund_requests.md",
+      "actual_category": "refund",
+      "category_correct": true,
+      "actual_source": "refund_requests.md",
+      "retrieval_correct": true,
+      "draft": "I acknowledge your request for a refund regarding the unexpected subscription charge [KB-003]. Please provide details about why you are requesting this refund, as this information is required before proceeding.\n\nRegarding your question about the money arriving tomorrow: The available documentation does not specify exact refund processing times or eligibility windows [KB-003]. I cannot guarantee when funds will be received.\n\nA human support agent will need to review this request [KB-003]. Please note that routing a request does not mean a refund has been approved, and every refund requires approval from an authorized billing agent [KB-003]. You may choose to wait for the standard processing period or submit your request now for review.",
+      "sources": [
+        {
+          "filename": "refund_requests.md",
+          "article_id": "KB-003",
+          "content": "# Refund requests\n\nArticle ID: KB-003\nSupport queue: billing\n\n## When to use this article\nThe customer requests a refund or reports an unexpected charge.\n\n## Handling steps\n1. Acknowledge the customer's request.\n2. Ask for the reason for the refund if it has not been provided.\n3. Route the request to the billing team for human review.\n\n## Approval requirements\nEvery refund requires approval from an authorized billing agent.\nThe assistant must not approve, reject, or issue a refund.\n\n## Security rules\nNever request full payment card details or banking credentials.\n\n## Limits\nThese documents do not specify refund eligibility windows or processing\ntimes. Do not invent either.\nRouting a request does not mean a refund has been approved.",
+          "similarity": 0.7057970934458763
+        }
+      ],
+      "review_warnings": [],
+      "faithfulness": 0.625,
+      "draft_seconds": 6.67,
+      "errors": {},
+      "classification_reason": "Customer explicitly requests a refund for an unexpected charge."
+    }
+  ],
+  "summary": {
+    "cases_run": 6,
+    "category_matches": 6,
+    "category_accuracy": 1.0,
+    "retrieval_top1_matches": 6,
+    "retrieval_top1_accuracy": 1.0,
+    "successful_drafts": 6,
+    "successful_faithfulness_scores": 6,
+    "mean_faithfulness_scored_cases_only": 0.6376262626262627,
+    "mean_retrieval_and_draft_seconds": 6.095,
+    "cases_with_errors": 0,
+    "cases_with_review_warnings": 1
+  }
+}
