@@ -11,7 +11,9 @@ from database import get_connection
 
 KNOWLEDGE_DIR = Path(__file__).resolve().parent.parent / "knowledge_base"
 EMBEDDING_MODEL = "nomic-embed-text"
-EMBEDDING_URL = "http://127.0.0.1:11434/api/embed"
+from settings import OLLAMA_BASE_URL
+
+EMBEDDING_URL = f"{OLLAMA_BASE_URL}/api/embed"
 
 
 def initialize_index():

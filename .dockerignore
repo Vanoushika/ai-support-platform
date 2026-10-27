@@ -1,0 +1,12 @@
+**/.git
+**/.venv
+**/__pycache__
+**/*.pyc
+**/node_modules
+**/dist
+**/.env
+**/.env.*
+**/*.db
+**/*.db-*
+**/evaluation_reports
+**/.DS_Store

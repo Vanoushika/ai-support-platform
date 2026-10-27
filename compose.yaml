@@ -1,0 +1,82 @@
+name: ai-support-containers
+
+x-app: &app
+  image: ai-support-backend:local
+  build:
+    context: .
+    dockerfile: backend/Dockerfile
+  environment:
+    DATABASE_PATH: /data/tickets.db
+    OLLAMA_BASE_URL: http://host.lima.internal:11434
+    TEMPORAL_ADDRESS: temporal:7233
+  extra_hosts:
+    - "host.lima.internal:192.168.5.2"
+  volumes:
+    - tickets-data:/data
+  init: true
+
+services:
+  temporal:
+    image: temporalio/temporal:1.9.1
+    # Local development server only; not a production Temporal deployment.
+    user: "0:0"
+    command: ["server", "start-dev", "--ip", "0.0.0.0", "--db-filename", "/data/temporal.db"]
+    ports:
+      - "127.0.0.1:7234:7233"
+      - "127.0.0.1:8234:8233"
+    volumes:
+      - temporal-data:/data
+    healthcheck:
+      test: ["CMD", "temporal", "operator", "cluster", "health", "--address", "127.0.0.1:7233"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+    restart: unless-stopped
+
+  indexer:
+    <<: *app
+    command: ["python", "retrieval.py", "--index"]
+    restart: "no"
+
+  api:
+    <<: *app
+    ports:
+      - "127.0.0.1:8001:8000"
+    depends_on:
+      temporal:
+        condition: service_healthy
+      indexer:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    restart: unless-stopped
+
+  worker:
+    <<: *app
+    command: ["python", "temporal_worker.py"]
+    depends_on:
+      temporal:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "127.0.0.1:8080:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  tickets-data:
+  temporal-data:

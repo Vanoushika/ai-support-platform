@@ -10,7 +10,9 @@ from pydantic import BaseModel, Field
 from database import get_connection
 
 MODEL_NAME = "qwen3.5:4b"
-OLLAMA_URL = "http://127.0.0.1:11434/api/chat"
+from settings import OLLAMA_BASE_URL
+
+OLLAMA_URL = f"{OLLAMA_BASE_URL}/api/chat"
 
 
 class Classification(BaseModel):

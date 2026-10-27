@@ -1,0 +1,9 @@
+# Runtime-only direct dependencies, pinned to the uploaded working environment.
+# Evaluation dependencies remain in requirements.txt and run in the Mac venv.
+fastapi==0.161.1
+uvicorn==0.54.0
+httpx==0.28.1
+pydantic==2.14.1
+langgraph==1.2.16
+langchain-core==1.7.0
+temporalio==1.34.0

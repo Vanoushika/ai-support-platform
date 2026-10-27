@@ -1,5 +1,7 @@
 import argparse
 import asyncio
+
+from settings import TEMPORAL_ADDRESS
 import json
 from datetime import timedelta
 from uuid import UUID
@@ -26,7 +28,7 @@ async def main():
     ticket_id = str(UUID(args.ticket_id))
     workflow_id = f"ticket-review-{ticket_id}"
 
-    client = await Client.connect("localhost:7233")
+    client = await Client.connect(TEMPORAL_ADDRESS)
 
     if args.command == "start":
         try:

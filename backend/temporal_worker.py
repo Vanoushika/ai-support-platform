@@ -1,4 +1,6 @@
 import asyncio
+
+from settings import TEMPORAL_ADDRESS
 import logging
 
 from temporalio.client import Client
@@ -17,7 +19,7 @@ TASK_QUEUE = "support-ticket-review"
 async def main():
     initialize_review_storage()
 
-    client = await Client.connect("localhost:7233")
+    client = await Client.connect(TEMPORAL_ADDRESS)
 
     worker = Worker(
         client,

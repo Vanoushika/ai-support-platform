@@ -1,11 +1,12 @@
 import sqlite3
-from pathlib import Path
+from settings import DATABASE_PATH
 
-DATABASE_PATH = Path(__file__).resolve().parent / "tickets.db"
+
 
 
 def get_connection():
-    connection = sqlite3.connect(DATABASE_PATH)
+    DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    connection = sqlite3.connect(DATABASE_PATH, timeout=30)
     connection.row_factory = sqlite3.Row
     return connection
 
