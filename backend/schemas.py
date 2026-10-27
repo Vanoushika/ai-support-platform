@@ -38,3 +38,5 @@ class TicketDraftResponse(BaseModel):
     requires_review: Literal[True] = True
     context_used: bool = True
     grounding_verified: Literal[False] = False
+    draft_strategy: Literal["generated", "revised", "fallback"] = "generated"
+    generation_attempts: int = Field(default=1, ge=0, le=2)

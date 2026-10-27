@@ -69,6 +69,8 @@ def summarize(results):
         "retrieval_top1_matches": retrievals,
         "retrieval_top1_accuracy": retrievals / total if total else None,
         "successful_drafts": sum(bool(item.get("draft")) for item in results),
+        "fallback_drafts": sum(item.get("draft_strategy") == "fallback" for item in results),
+        "revised_drafts": sum(item.get("draft_strategy") == "revised" for item in results),
         "successful_faithfulness_scores": len(scores),
         "mean_faithfulness_scored_cases_only": mean(scores) if scores else None,
         "mean_retrieval_and_draft_seconds": mean(times) if times else None,
@@ -184,6 +186,8 @@ async def evaluate_case(case, scorer):
         )
         result["draft_seconds"] = round(perf_counter() - started, 2)
         result["draft"] = generated["draft"]
+        result["draft_strategy"] = generated.get("draft_strategy", "unknown")
+        result["generation_attempts"] = generated.get("generation_attempts")
         result["sources"] = generated["sources"]
         result["review_warnings"] = generated["review_warnings"]
 
