@@ -11,3 +11,4 @@ temporalio==1.34.0
 # OpenTelemetry HTTP exporters and Temporal tracing integration.
 opentelemetry-sdk==1.45.1
 opentelemetry-exporter-otlp-proto-http==1.45.1
+psycopg[binary]==3.2.10

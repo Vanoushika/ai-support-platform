@@ -10,3 +10,6 @@
 **/*.db-*
 **/evaluation_reports
 **/.DS_Store
+
+# Local generated database credentials
+.local-secrets/

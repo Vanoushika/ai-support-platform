@@ -9,13 +9,37 @@ x-app: &app
     DATABASE_PATH: /data/tickets.db
     OLLAMA_BASE_URL: http://host.lima.internal:11434
     TEMPORAL_ADDRESS: temporal:7233
+    VECTOR_BACKEND: pgvector
+    VECTOR_HOST: vector-db
+    VECTOR_DATABASE: support_knowledge
+    VECTOR_USER: support
+    VECTOR_PASSWORD_FILE: /run/secrets/vector_password
   extra_hosts:
     - "host.lima.internal:192.168.5.2"
   volumes:
     - tickets-data:/data
+  secrets:
+    - vector_password
   init: true
 
 services:
+  vector-db:
+    image: pgvector/pgvector:0.8.7-pg17-trixie
+    environment:
+      POSTGRES_DB: support_knowledge
+      POSTGRES_USER: support
+      POSTGRES_PASSWORD_FILE: /run/secrets/vector_password
+    secrets:
+      - vector_password
+    volumes:
+      - vector-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U support -d support_knowledge"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
   temporal:
     image: temporalio/temporal:1.9.1
     # Local development server only; not a production Temporal deployment.
@@ -36,6 +60,9 @@ services:
 
   indexer:
     <<: *app
+    depends_on:
+      vector-db:
+        condition: service_healthy
     command: ["python", "retrieval.py", "--index"]
     restart: "no"
 
@@ -140,3 +167,8 @@ volumes:
   tempo-data:
   prometheus-data:
   grafana-data:
+  vector-data:
+
+secrets:
+  vector_password:
+    file: ./.local-secrets/vector_password

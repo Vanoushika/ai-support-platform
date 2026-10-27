@@ -13,12 +13,16 @@ from database import get_connection
 
 KNOWLEDGE_DIR = Path(__file__).resolve().parent.parent / "knowledge_base"
 EMBEDDING_MODEL = "nomic-embed-text"
-from settings import OLLAMA_BASE_URL
+from settings import OLLAMA_BASE_URL, VECTOR_BACKEND
 
 EMBEDDING_URL = f"{OLLAMA_BASE_URL}/api/embed"
 
 
 def initialize_index():
+    if VECTOR_BACKEND == "pgvector":
+        from vector_store import initialize
+        return initialize()
+
     connection = get_connection()
 
     try:
@@ -38,6 +42,10 @@ def initialize_index():
 
 
 def read_index() -> list[dict]:
+    if VECTOR_BACKEND == "pgvector":
+        from vector_store import read_index as read_vectors
+        return read_vectors()
+
     initialize_index()
     connection = get_connection()
 
@@ -64,6 +72,10 @@ def read_index() -> list[dict]:
 
 
 def save_index(documents: list[dict]):
+    if VECTOR_BACKEND == "pgvector":
+        from vector_store import save_index as save_vectors
+        return save_vectors(documents, EMBEDDING_MODEL)
+
     connection = get_connection()
 
     try:
@@ -193,6 +205,7 @@ async def index_documents() -> dict:
     await asyncio.to_thread(save_index, documents)
 
     return {
+        "backend": VECTOR_BACKEND,
         "indexed_documents": len(documents),
         "new_or_updated_embeddings": len(changed_documents),
         "reused_embeddings": reused,
@@ -224,20 +237,21 @@ async def search_knowledge(query: str, top_k: int = 2) -> list[dict]:
     if top_k < 1:
         raise ValueError("top_k must be at least 1.")
 
-    documents = await asyncio.to_thread(read_index)
+    if VECTOR_BACKEND == "sqlite":
+        documents = await asyncio.to_thread(read_index)
 
-    if not documents:
-        raise ValueError(
-            "Knowledge index is empty. Run: python retrieval.py --index"
-        )
-
-    # Detect configuration changes or inconsistent stored content.
-    for document in documents:
-        if document["fingerprint"] != fingerprint(document["content"]):
+        if not documents:
             raise ValueError(
-                "Knowledge index needs rebuilding. "
-                "Run: python retrieval.py --index"
+                "Knowledge index is empty. Run: python retrieval.py --index"
             )
+
+        # Detect configuration changes or inconsistent stored content.
+        for document in documents:
+            if document["fingerprint"] != fingerprint(document["content"]):
+                raise ValueError(
+                    "Knowledge index needs rebuilding. "
+                    "Run: python retrieval.py --index"
+                )
 
     async with httpx.AsyncClient(
         timeout=httpx.Timeout(180.0, connect=10.0)
@@ -248,6 +262,14 @@ async def search_knowledge(query: str, top_k: int = 2) -> list[dict]:
         )
 
     query_vector = vectors[0]
+
+    if VECTOR_BACKEND == "pgvector":
+        from vector_store import search
+        results = await asyncio.to_thread(search, query_vector, top_k, EMBEDDING_MODEL)
+        for result in results:
+            if result.pop("fingerprint") != fingerprint(result["content"]):
+                raise ValueError("Knowledge index needs rebuilding. Run retrieval.py --index.")
+        return results
 
     results = [
         {

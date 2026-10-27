@@ -126,3 +126,6 @@ __marimo__/
 # Local SQLite database files
 backend/tickets.db
 backend/tickets.db-*
+
+# Local generated database credentials
+.local-secrets/
