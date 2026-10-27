@@ -3,6 +3,8 @@ import asyncio
 from settings import TEMPORAL_ADDRESS
 import logging
 
+from observability import configure_telemetry, temporal_interceptors
+
 from temporalio.client import Client
 from temporalio.worker import Worker
 
@@ -17,9 +19,10 @@ TASK_QUEUE = "support-ticket-review"
 
 
 async def main():
+    configure_telemetry("support-worker")
     initialize_review_storage()
 
-    client = await Client.connect(TEMPORAL_ADDRESS)
+    client = await Client.connect(TEMPORAL_ADDRESS, interceptors=temporal_interceptors())
 
     worker = Worker(
         client,

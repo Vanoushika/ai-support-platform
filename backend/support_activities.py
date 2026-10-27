@@ -1,6 +1,8 @@
 import asyncio
 import json
 
+from observability import observed
+
 from temporalio import activity
 from temporalio.exceptions import ApplicationError
 
@@ -160,6 +162,7 @@ def save_decision(workflow_id: str, decision: str) -> dict:
 
 
 @activity.defn
+@observed("review.prepare")
 async def prepare_ticket_review(ticket_id: str) -> dict:
     workflow_id = activity.info().workflow_id
 
@@ -196,6 +199,7 @@ async def prepare_ticket_review(ticket_id: str) -> dict:
 
 
 @activity.defn
+@observed("review.record_decision")
 async def record_review_decision(decision: str) -> dict:
     return await asyncio.to_thread(
         save_decision,

@@ -5,7 +5,7 @@ x-app: &app
   build:
     context: .
     dockerfile: backend/Dockerfile
-  environment:
+  environment: &app-environment
     DATABASE_PATH: /data/tickets.db
     OLLAMA_BASE_URL: http://host.lima.internal:11434
     TEMPORAL_ADDRESS: temporal:7233
@@ -41,6 +41,11 @@ services:
 
   api:
     <<: *app
+    environment:
+      <<: *app-environment
+      OTEL_ENABLED: "true"
+      OTEL_SERVICE_NAME: support-api
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
     ports:
       - "127.0.0.1:8001:8000"
     depends_on:
@@ -58,6 +63,11 @@ services:
 
   worker:
     <<: *app
+    environment:
+      <<: *app-environment
+      OTEL_ENABLED: "true"
+      OTEL_SERVICE_NAME: support-worker
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
     command: ["python", "temporal_worker.py"]
     depends_on:
       temporal:
@@ -77,6 +87,56 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.137.0
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./observability/collector.yaml:/etc/otelcol/config.yaml:ro
+    depends_on:
+      - tempo
+    restart: unless-stopped
+
+  tempo:
+    image: grafana/tempo:2.9.0
+    # Root is used only for writing this isolated local-demo volume.
+    user: "0:0"
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./observability/tempo.yaml:/etc/tempo.yaml:ro
+      - tempo-data:/var/tempo
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    command:
+      - --config.file=/etc/prometheus/prometheus.yaml
+      - --storage.tsdb.retention.time=2d
+      - --storage.tsdb.retention.size=512MB
+    volumes:
+      - ./observability/prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
+      - prometheus-data:/prometheus
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:12.2.0
+    ports:
+      - "127.0.0.1:3001:3000"
+    environment:
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+      - tempo
+    restart: unless-stopped
+
 volumes:
   tickets-data:
   temporal-data:
+  tempo-data:
+  prometheus-data:
+  grafana-data:

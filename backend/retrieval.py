@@ -2,6 +2,8 @@ import argparse
 import asyncio
 import hashlib
 import json
+
+from observability import observed
 import math
 from pathlib import Path
 
@@ -214,6 +216,7 @@ def cosine_similarity(a: list[float], b: list[float]) -> float:
     return dot_product / (magnitude_a * magnitude_b)
 
 
+@observed("knowledge.search")
 async def search_knowledge(query: str, top_k: int = 2) -> list[dict]:
     if not query.strip():
         raise ValueError("Search query cannot be empty.")

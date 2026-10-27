@@ -1,4 +1,6 @@
 import json
+
+from observability import observed
 import re
 
 import httpx
@@ -139,6 +141,7 @@ def check_draft(draft: str, article_ids: set[str]) -> list[str]:
     return warnings
 
 
+@observed("draft.generate")
 async def draft_ticket_response(title: str, description: str) -> dict:
     results = await search_knowledge(
         query=f"{title}\n{description}",

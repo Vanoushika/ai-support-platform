@@ -1,5 +1,7 @@
 import asyncio
 import json
+
+from observability import observed
 from datetime import datetime, timezone
 from typing import Literal, TypedDict
 
@@ -93,6 +95,7 @@ def get_saved_routing(ticket_id: str) -> dict | None:
     return json.loads(row["decision"])
 
 
+@observed("ticket.classify")
 async def classify_ticket(state: RoutingState) -> dict:
     payload = {
         "model": MODEL_NAME,

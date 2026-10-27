@@ -1,6 +1,7 @@
 import asyncio
 
 from settings import TEMPORAL_ADDRESS
+from observability import temporal_interceptors
 from contextlib import asynccontextmanager
 from typing import Literal
 from uuid import UUID
@@ -72,7 +73,7 @@ async def temporal_errors():
 async def connect_temporal() -> Client:
     try:
         return await asyncio.wait_for(
-            Client.connect(TEMPORAL_ADDRESS),
+            Client.connect(TEMPORAL_ADDRESS, interceptors=temporal_interceptors()),
             timeout=5,
         )
     except (TimeoutError, RuntimeError, OSError) as exc:
