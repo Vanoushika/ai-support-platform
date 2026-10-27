@@ -1,6 +1,8 @@
 # Local tracing and dashboards
 
-Run the installer, then from the project root:
+Use CONTAINERS.md for first-time setup and startup after a full stop.
+OpenBao must be unsealed. For an update while the stack is already running,
+from the project root:
 
 ```sh
 docker compose config --quiet
@@ -34,7 +36,11 @@ docker compose logs --tail=60 api worker otel-collector tempo prometheus grafana
 ```
 
 The dashboard may need a minute and multiple requests before rate/latency panels
-have samples. Zero traffic or no operation executions produces empty panels.
+have samples. Operation averages and counts now use cumulative values since each
+worker process started; restarts reset them. They are not rolling 15-minute totals.
+No operation executions produces empty operation panels. The API error-rate panel
+uses a 0–1 fraction displayed as 0–100%; its zero fallback is not proof of health
+when no samples exist. Nginx-generated 502s are not counted by API instrumentation.
 The collector scrape health panel alone does not prove telemetry flows end to end.
 
 ## What is measured
@@ -70,3 +76,20 @@ integration; the diagnostic methods used in diagnose_faithfulness.py are unrelat
 If Colima runs out of memory, stop the containers normally, stop Colima, then start
 it with `colima start --cpu 2 --memory 6` and bring containers back up. This is an
 optional adjustment on the 16 GB Mac; start with the existing 4 GB allocation.
+
+## Observed trace-timing limitation
+
+A status-query trace displayed minutes of total duration while its API span lasted
+about 18 ms. The cause has not been verified. Temporal workflow-related span timing
+can include a different time range than an individual HTTP request; investigate raw
+span timestamps before treating the total as latency. Preparation traces did show
+classification, retrieval and drafting in one API/worker trace. For those, search:
+
+```text
+{ resource.service.name = "support-worker" && name = "review.prepare" }
+```
+
+Knowledge retrieval is nested within draft generation, so do not add the retrieval
+and drafting durations as if they were independent sequential operations. The live
+check only establishes that metrics and worker traces exist; it does not verify
+all timing semantics or all traces' cross-service relationships.

@@ -12,24 +12,22 @@ remain available to native development, but Docker re-embeds articles into its
 new vector-data volume. Saved historical drafts are not regenerated.
 
 ## Install and verify
-From the project root, after applying the installer:
+
+Follow CONTAINERS.md for the current first-time setup or daily startup. It includes
+OpenBao initialization/unsealing before running indexer and application services.
+With the stack running and OpenBao unsealed:
 
 ```bash
-python setup_vector.py
-git check-ignore .local-secrets/vector_password
-docker compose config --quiet
-docker compose build api worker indexer
-docker compose up -d vector-db
-docker compose run --rm indexer
-docker compose up -d
 docker compose exec api python check_vector.py
+docker compose run --rm indexer
 ```
 
-The first index creates new embeddings. Run `docker compose run --rm indexer`
-again to verify reuse. Test a new workflow in http://localhost:8080 and inspect
-its retrieved sources. Then test persistence with `docker compose down` followed
-by `docker compose up -d` and repeat the checker. Do not add `-v`: that deletes
-project volumes, including existing tickets and Temporal data.
+The first index creates new embeddings. An unchanged subsequent run should report
+three reused embeddings and zero new embeddings. Test a NEW ticket workflow at
+http://localhost:8080 and inspect its retrieved sources. For restart testing, follow
+the OpenBao-aware startup sequence in CONTAINERS.md, then repeat the checker.
+A successful checker after startup verifies retrieval recovery; because indexing
+can rerun, it is not proof of an off-machine backup/restore procedure.
 
 ## Index behavior
 Indexing computes all changed embeddings before replacing documents in one
@@ -46,13 +44,13 @@ therefore do not evaluate pgvector. Use the container checker for this backend.
 Install updated requirements if opting into native PostgreSQL access; no database
 port is published by Compose. This update is pgvector, not MongoDB Atlas Vector Search.
 
-## Credentials and scope
-`setup_vector.py` generates one random password and preserves it on repeated runs.
-The containing host directory is private (0700). Compose mounts its file read-only
-in the database and app containers. The file is readable by the non-root app uid;
-it is excluded from Git and Docker build contexts. Keep it with the database volume:
-changing the file alone does not rotate an initialized PostgreSQL user's password.
-This is local file-based secret delivery, not Vault/OpenBao integration.
+## Credentials and scope (current OpenBao integration)
+`setup_vector.py` creates the initial random PostgreSQL password. The database
+service retains that bootstrap file mount. API, worker and indexer now authenticate
+to OpenBao with AppRole and read the same password from KV v2; they do not mount
+the direct password file. See SECRETS.md. The native file-provider path remains
+available when explicitly configured. No automatic database password rotation or
+dynamic credentials are implemented.
 
 This isolated local demo uses a database-owner account (the image's bootstrap user)
 for extension/table initialization and retrieval. Production requires separate
